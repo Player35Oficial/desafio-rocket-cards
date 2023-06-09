@@ -37,6 +37,7 @@
   width: 90%;
   border-radius: 50px;
   overflow: hidden;
+  transition: all 1s;
 }
 
 .card-content header {
@@ -79,6 +80,7 @@
   border: 8px solid var(--img-profile);
   border-radius: 50%;
   width: fit-content;
+  background: url("https://avatars.githubusercontent.com/u/85082875?v=4");
 }
 
 .card-container main .img-container img {

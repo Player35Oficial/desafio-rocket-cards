@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import rocketLogo from "./assets/logo.svg";
 import company from "./assets/company.svg";
@@ -6,9 +6,13 @@ import followers from "./assets/followers.svg";
 import following from "./assets/following.svg";
 import location from "./assets/location.svg";
 import repository from "./assets/repository.svg";
+import html2canvas from "html2canvas";
+import { saveAs } from "file-saver";
 
 function App() {
   const [user, setUser] = useState({});
+  const [randomColors, setRandomColors] = useState({});
+  const cardRef = useRef(null);
 
   const url = "https://api.github.com/users/player35Oficial";
 
@@ -25,10 +29,35 @@ function App() {
   useEffect(() => {
     fetchUser();
   }, [url]);
-  console.log(user);
+
+  const generateRandomColors = () => {
+    const colors = {
+      r: Math.floor(Math.random() * 256),
+      g: Math.floor(Math.random() * 256),
+      b: Math.floor(Math.random() * 256),
+    };
+    return colors;
+  };
+
+  // console.log(randomColors);
+  const handleGenerateBackground = () => {
+    setRandomColors(generateRandomColors);
+    document.querySelector(".card-content").style.backgroundColor = `
+      rgb(${randomColors.r}, ${randomColors.g}, ${randomColors.b})
+    `;
+  };
+
+  const handleDownload = () => {
+    html2canvas(cardRef.current, { useCORS: true }).then((canvas) => {
+      canvas.toBlob((blob) => {
+        saveAs(blob, "card.png");
+      });
+    });
+  };
+
   return (
     <div className="main-container">
-      <div className="card-container">
+      <div ref={cardRef} className="card-container">
         <div className="card-content">
           <header>
             <div className="header-logo">
@@ -79,7 +108,15 @@ function App() {
       <div className="auxiliar-container">
         <div className="block">
           <p>Customizar Rocketcard</p>
-          <button id="gerar-bg">Gerar Background</button>
+          <button onClick={handleGenerateBackground} id="gerar-bg">
+            Gerar Background
+          </button>
+        </div>
+        <div className="block">
+          <p>Compartilhe com Amigos</p>
+          <button onClick={handleDownload} id="gerar-bg">
+            Download Card
+          </button>
         </div>
       </div>
     </div>
